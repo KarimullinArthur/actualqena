@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "tmp-v1"
+version = "1.2.0"
+description = "Tamplate with aiogram2 and psycopg2"
+authors = ["Karimullin Arthur <KarimullinArthur@riseup.net>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "tmp_v1"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dotenv = "0.13.0"
+aiogram = "^2.23.1"
+aioredis = "^2.0.1"
+apscheduler = "^3.9.1.post1"
+psycopg2-binary = "^2.9.5"
+redis = "^4.5.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
