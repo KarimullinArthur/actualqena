@@ -2,6 +2,7 @@ from aiogram import Bot
 from aiogram.dispatcher import Dispatcher
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+# from middleware.trustat import TrustatApi
 
 import config
 from db.db import Database
@@ -13,3 +14,4 @@ bot = Bot(config.BOT_TOKEN, parse_mode='HTML')
 dp = Dispatcher(bot, storage=storage)
 db = Database(f'dbname={config.PG_DATABASE} user={config.PG_USER}')
 scheduler = AsyncIOScheduler()
+# trustat_api = TrustatApi()

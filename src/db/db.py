@@ -46,6 +46,27 @@ class Database:
         self.cur.execute(
                 f"UPDATE users SET live = {status} WHERE tg_id = {tg_id}")
 
+    def add_link(self, tg_id, links, username, name):
+        self.cur.execute(
+                "INSERT INTO links(tg_id, links, username, name)\
+                        VALUES(%s, %s, %s, %s)",
+                        (tg_id, links, username, name))
+
+    def get_link(self, tg_id):
+        self.cur.execute(f"SELECT * FROM links WHERE tg_id = {tg_id}")
+
+        result_sql = self.cur.fetchone()
+
+        result = {
+                'id': result_sql[0],
+                'tg_id': result_sql[1],
+                'links': result_sql[2],
+                'username': result_sql[3],
+                'name': result_sql[4]
+                }
+
+        return result
+
     def add_ref_link(self, name_link):
         self.cur.execute("INSERT INTO ref_links(name) VALUES(%s)",
                          (name_link,))
@@ -63,6 +84,13 @@ class Database:
         for i in result_sql:
             result.append(i[0].strip())
 
+        return result
+
+    def get_all_link(self):
+        self.cur.execute("SELECT tg_id FROM links")
+
+        result = self.cur.fetchall()
+        result = list(map(lambda x: x[0], result))
         return result
 
     def get_count_user_ref_link(self, name_link):
@@ -144,6 +172,3 @@ class Database:
 
         result = self.cur.fetchone()
         return result[0]
-
-
-# db = Database('dbname=tmp_v1 user=arthur')

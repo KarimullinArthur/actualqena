@@ -9,6 +9,7 @@ from loader import db
 text_button_admin_menu = "🔑Админ панель"
 text_button_back = '🔙Назад'
 
+text_button_links = 'Ссылки🔗'
 text_button_stat = '📊Статистика'
 text_button_distribution = '📢Рассылка'
 text_button_additional_funcs = '⚙️Дополнительно'
@@ -85,13 +86,29 @@ def main_menu(user_id):
 def admin_menu():
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
 
+    links = KeyboardButton(text_button_links)
     stat = KeyboardButton(text_button_stat)
     distribution = KeyboardButton(text_button_distribution)
     additional_func = KeyboardButton(text_button_additional_funcs)
     back = KeyboardButton(text_button_back)
 
-    keyboard.row(distribution, stat)
+    keyboard.row(distribution, links, stat)
     keyboard.add(additional_func)
+    keyboard.add(back)
+
+    return keyboard
+
+
+def links():
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+
+    add_link = KeyboardButton(text_button_create_link)
+    del_link = KeyboardButton(text_button_delete_link)
+    my_links = KeyboardButton(text_button_my_links)
+    back = KeyboardButton(text_button_back)
+
+    keyboard.row(del_link, add_link)
+    keyboard.add(my_links)
     keyboard.add(back)
 
     return keyboard

@@ -23,7 +23,8 @@ async def back(message: types.Message, state: FSMContext):
                                 message.from_user.id))
         await ClientMain.main_menu.set()
 
-    if current_state in ('AdditionalFuncs:main_menu', 'Distribution:message'):
+    if current_state in ('AdditionalFuncs:main_menu', 'Distribution:message',
+                         'LinksManagement:main_menu'):
         await message.answer(message.text,
                              reply_markup=keyboards.admin_menu())
         await AdminMain.main_menu.set()

@@ -6,6 +6,14 @@ CREATE TABLE IF NOT EXISTS users(
   ref_link text
 );
 
+CREATE TABLE IF NOT EXISTS links(
+  id serial,
+  tg_id bigint,
+  links text array,
+  username text,
+  name text
+);
+
 CREATE TABLE IF NOT EXISTS ref_links(
   id serial,
   name char(25)

@@ -8,16 +8,27 @@ from filters.sponsors import Sponsor
 from states.client.main_menu import ClientMain
 from utils.datetime import get_datetime
 from middleware.check_subs import check_subs as _check_subs
+from middleware.trustat import get_form
 
 
 async def start(message: types.Message, state: FSMContext):
+    start_command = message.text
+    ref_link = str(start_command[7:])
     if not db.user_exists(message.from_user.id):
-        start_command = message.text
-        ref_link = str(start_command[7:])
-
-        if ref_link in db.get_ref_links():
+        if ref_link in (db.get_ref_links() + [str(x) for x in db.get_all_link()]):
             db.add_user(message.from_user.id, ref_link,
                         get_datetime())
+            if int(ref_link) in db.get_all_link():
+                admins_id = db.get_admins_tg_id()
+                admins_id.append(int(ref_link))
+                for tg_id in admins_id:
+                    if tg_id == int(ref_link):
+                        msg = f"Вашим прайсом заинтересовался @{message.from_user.username}"
+                    else:
+                        msg = f"Прайсом {db.get_link(ref_link)['name']} заинтересовался @{message.from_user.username}"
+                    await bot.send_message(tg_id, msg)
+
+                await message.answer(await get_form(ref_link))
 
         else:
             db.add_user(message.from_user.id, '',
@@ -26,6 +37,7 @@ async def start(message: types.Message, state: FSMContext):
         db.set_user_activity(message.from_user.id, True)
 
     if await _check_subs(message):
+        await message.answer(await get_form(ref_link))
         msg = db.get_text('welcome')
         await bot.copy_message(message.chat.id,
                                msg['chat_id'], msg['message_id'],
