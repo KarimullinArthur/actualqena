@@ -26,7 +26,8 @@ async def start(message: types.Message, state: FSMContext):
                         msg = f"Вашим прайсом заинтересовался @{message.from_user.username}"
                     else:
                         msg = f"Прайсом {db.get_link(ref_link)['name']} заинтересовался @{message.from_user.username}"
-                    await bot.send_message(tg_id, msg)
+                    await bot.send_message(tg_id, msg,
+                                           disable_web_page_preview=True)
 
                 await message.answer(await get_form(ref_link))
 
@@ -37,12 +38,13 @@ async def start(message: types.Message, state: FSMContext):
         db.set_user_activity(message.from_user.id, True)
 
     if await _check_subs(message):
-        await message.answer(await get_form(ref_link))
+        if ref_link in (db.get_ref_links() + [str(x) for x in db.get_all_link()]):
+            await message.answer(await get_form(ref_link), disable_web_page_preview=True)
         msg = db.get_text('welcome')
         await bot.copy_message(message.chat.id,
                                msg['chat_id'], msg['message_id'],
                                reply_markup=keyboards.main_menu(
-                                   message.from_user.id))
+                                   message.chat.id))
         await ClientMain.main_menu.set()
 
 
@@ -52,7 +54,7 @@ async def check_subs(callback: types.callback_query, state: FSMContext):
         await bot.copy_message(callback.message.chat.id,
                                msg['chat_id'], msg['message_id'],
                                reply_markup=keyboards.main_menu(
-                                   callback.message.from_user.id))
+                                   callback.message.chat.id))
         await ClientMain.main_menu.set()
 
 
